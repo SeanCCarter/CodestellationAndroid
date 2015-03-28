@@ -4,7 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.provider.Settings;
+// import android.provider.Settings;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,25 +12,28 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-
 import java.lang.*;
-import java.util.Random;
 
 
-public class MainActivity extends ActionBarActivity {
-
+public class MainActivity extends ActionBarActivity
+{
     MyView view;
+    TextView tv;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState)
+    {
         super.onCreate(savedInstanceState);
         view = new MyView(this);
         setContentView(view);
+        tv = (TextView)findViewById(R.id.scoreCounter);
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        switch (event.getAction()) {
+    public boolean onTouchEvent(MotionEvent event)
+    {
+        switch (event.getAction())
+        {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_MOVE:
             case MotionEvent.ACTION_UP:
@@ -44,35 +47,31 @@ public class MainActivity extends ActionBarActivity {
 
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatementcmd
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        return id == R.id.action_settings || super.onOptionsItemSelected(item);
     }
 
     public class MyView extends View
     {
-
         Point pos = new Point(0, 0);
         Point cursor = new Point(0,0);
         int score = 0;
-        TextView tv = (TextView)findViewById(R.id.scoreCounter);
-
+        Paint paint = new Paint();
 
         public MyView(Context context)
         {
@@ -92,24 +91,21 @@ public class MainActivity extends ActionBarActivity {
         {
             tv.setText(score);
             System.out.println(score);
-
         }
 
         @Override
         protected void onDraw(Canvas canvas)
         {
-            Paint paint = new Paint();
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.BLACK);
             canvas.drawCircle(cursor.getPosX(), cursor.getPosY(), cursor.getDistance(pos), paint);
 
-            if (cursor.getDistance(pos)<30)
+            if (cursor.getDistance(pos) < 30)
             {
                 score++;
-                updateScore("" + score);
+                updateScore(""+score);
                 randomizeCoords();
             }
-
         }
     }
 
@@ -127,28 +123,28 @@ public class MainActivity extends ActionBarActivity {
 
         public int getPosX()
         {
-            return this.posX;
+            return posX;
         }
 
         public int getPosY()
         {
-            return this.posY;
+            return posY;
         }
 
         public void setPosX(int x)
         {
-            this.posX = x;
+            posX = x;
         }
 
         public void setPosY(int y)
         {
-            this.posY = y;
+            posY = y;
         }
 
         public int getDistance(Point other)
         {
-            int dx = Math.abs(this.posX - other.posX);
-            int dy = Math.abs(this.posY - other.posY);
+            int dx = Math.abs(posX - other.posX);
+            int dy = Math.abs(posY - other.posY);
             return (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         }
     }
