@@ -1,3 +1,3 @@
 # CodestellationAndroid
 
-Hi guys. Let's make and App!
+Hi guys. Let's make an App!
