@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:textSize="200sp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text=""
+        android:text="0"
         android:textColor = "#64ff0000"
         android:id="@+id/scoreCounter"
         android:layout_centerVertical="true"
