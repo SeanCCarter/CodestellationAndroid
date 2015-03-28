@@ -10,6 +10,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
+
+import java.lang.*;
+import java.util.Random;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -27,11 +31,11 @@ public class MainActivity extends ActionBarActivity {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                view.touch_x = (int)event.getX();
-                view.touch_y = (int)event.getY();
+            case MotionEvent.ACTION_MOVE:
+            case MotionEvent.ACTION_UP:
+                view.cursor.setPosX((int)event.getX());
+                view.cursor.setPosY((int)event.getY()-220);
                 break;
-//            case MotionEvent.ACTION_MOVE:
-//            case MotionEvent.ACTION_UP:
         }
         view.invalidate();
         return false;
@@ -52,7 +56,7 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //noinspection SimplifiableIfStatementcmd
         if (id == R.id.action_settings) {
             return true;
         }
@@ -63,12 +67,23 @@ public class MainActivity extends ActionBarActivity {
     public class MyView extends View
     {
 
-        int touch_x = 200;
-        int touch_y = 200;
+        Point pos = new Point(0, 0);
+        Point cursor = new Point(0,0);
+        int score = 0;
+        TextView tv = (TextView)findViewById(R.id.scoreCounter);
 
         public MyView(Context context)
         {
             super(context);
+            randomizeCoords();
+        }
+
+        public void randomizeCoords()
+        {
+            int randX = 40 + (int)(Math.random() * 1000);
+            int randY = 10 + (int)(Math.random() * 1900);
+            pos.setPosX(randX);
+            pos.setPosY(randY);
         }
 
         @Override
@@ -77,7 +92,54 @@ public class MainActivity extends ActionBarActivity {
             Paint paint = new Paint();
             paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.BLACK);
-            canvas.drawCircle(touch_x, touch_y, 50, paint);
+            canvas.drawCircle(cursor.getPosX(), cursor.getPosY(), cursor.getDistance(pos), paint);
+            if (cursor.getDistance(pos)<30)
+            {
+                score++;
+                //tv.setText("" + score);
+                randomizeCoords();
+            }
+
+        }
+    }
+
+
+    public class Point
+    {
+        private int posX;
+        private int posY;
+
+        public Point(int x, int y)
+        {
+            posX = x;
+            posY = y;
+        }
+
+        public int getPosX()
+        {
+            return this.posX;
+        }
+
+        public int getPosY()
+        {
+            return this.posY;
+        }
+
+        public void setPosX(int x)
+        {
+            this.posX = x;
+        }
+
+        public void setPosY(int y)
+        {
+            this.posY = y;
+        }
+
+        public int getDistance(Point other)
+        {
+            int dx = Math.abs(this.posX - other.posX);
+            int dy = Math.abs(this.posY - other.posY);
+            return (int)Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
         }
     }
 }
